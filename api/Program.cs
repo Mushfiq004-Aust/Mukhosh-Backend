@@ -1,4 +1,6 @@
+using api;
 using api.Database; // for database context
+using api.Repository;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -18,6 +20,8 @@ builder.Services.AddDbContext<ApplicationDBContext>(options =>
 // Add the controllers to the services collection
 builder.Services.AddControllers();
 
+// Add the IUserRepository interface and its implementation to the services collection, so that it can be injected into the controllers.
+builder.Services.AddScoped<IUserRepository, UserRepo>();
 
 var app = builder.Build();
 
