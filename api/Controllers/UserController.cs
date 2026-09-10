@@ -91,7 +91,7 @@ namespace api.Controllers
 
             _context.User.Remove(user);
             _context.SaveChanges();
-            return Ok();
+            return NoContent(); //204 No Content status code, because the user has been deleted and there is no content to return
         }
 
     }
