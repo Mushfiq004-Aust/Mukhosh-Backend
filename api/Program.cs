@@ -1,4 +1,4 @@
-using api.Database;
+using api.Database; // for database context
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,6 +15,9 @@ builder.Services.AddDbContext<ApplicationDBContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
+// Add the controllers to the services collection
+builder.Services.AddControllers();
+
 
 var app = builder.Build();
 
@@ -27,6 +30,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+// Map the controllers to the endpoints
+app.MapControllers();
 
 app.Run();
 
