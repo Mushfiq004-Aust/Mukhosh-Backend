@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using api.DTOs.User;
 using api.Models;
 
 //Interface for User Repository
@@ -14,8 +15,20 @@ namespace api
 {
     public interface IUserRepository
     {
-        Task<List<User>> GetAllUsers();
+        Task<List<User>> GetAllUsersAsync();
         //Method to retrieve all users from the repository. 
         //It returns a Task that resolves to a List of User objects, allowing for asynchronous operation.
+
+        Task<User?> GetUserByIdAsync(Guid id);
+        //Method to retrieve a single user by their unique identifier (id). can return null if the user is not found, hence the nullable User type.
+
+        Task<User> CreateUserAsync(UserInCreate user);
+        //Method to create a new user in the repository.
+
+        Task<User?> UpdateUserAsync(Guid id, UserInUpdate user);
+        //Method to update an existing user's information based on their unique identifier (id).
+
+        Task<User?> DeleteUserAsync(Guid id);
+        //Method to delete a user from the repository based on their unique identifier (id).
     }
 }
