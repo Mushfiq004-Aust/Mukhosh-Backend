@@ -58,7 +58,41 @@ namespace api.Controllers
             //201 Created status code with the user in the response body
             return CreatedAtAction(nameof(GetUserById), new { id = user.UserId }, user.ToUserInView());
         }
+
+
+        [HttpPut]
+        [Route("{id:guid}")]
+        public IActionResult UpdateUser([FromRoute] Guid id, [FromBody] UserInUpdate userInUpdateObject)
+        {
+            var user = _context.User.Find(id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var updatedUser = userInUpdateObject.ToUserInUpdate(); //map the request body to the User model using the mapper class
+            user.Name = updatedUser.Name;
+            user.Phone = updatedUser.Phone;
+
+            _context.SaveChanges();
+            return Ok(user.ToUserInView());
+        }
         
-        
+
+        [HttpDelete]
+        [Route("{id:guid}")]
+        public IActionResult DeleteUser([FromRoute] Guid id)
+        {
+            var user = _context.User.Find(id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            _context.User.Remove(user);
+            _context.SaveChanges();
+            return Ok();
+        }
+
     }
 }
