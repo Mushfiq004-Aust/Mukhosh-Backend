@@ -40,7 +40,7 @@ namespace api.Controllers
         }
 
         [HttpGet]
-        [Route("{userId : guid}")] // api/User/{userId}
+        [Route("{userId:guid}")] // api/User/{userId}
         public async Task<IActionResult> GetUserById([FromRoute] Guid userId)
         {
             var user = await _userRepo.GetUserByIdAsync(userId); // FirstOrDefault also works, but Find is more efficient because it uses the primary key to find the user.
@@ -63,7 +63,7 @@ namespace api.Controllers
 
 
         [HttpPut]
-        [Route("{userId : guid}")]
+        [Route("{userId:guid}")]
         public async Task<IActionResult> UpdateUser([FromRoute] Guid userId, [FromBody] UserInUpdate userInUpdateObject)
         {
             var userUpdates = await _userRepo.UpdateUserAsync(userId, userInUpdateObject);
@@ -76,7 +76,7 @@ namespace api.Controllers
 
 
         [HttpDelete]
-        [Route("{userId : guid}")]
+        [Route("{userId:guid}")]
         public async Task<IActionResult> DeleteUser([FromRoute] Guid userId)
         {
             var user = await _userRepo.DeleteUserAsync(userId);
