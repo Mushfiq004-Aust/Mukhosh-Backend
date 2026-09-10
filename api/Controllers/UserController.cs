@@ -19,13 +19,12 @@ namespace api.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        private readonly ApplicationDBContext _context; // immutable variable, cannot be changed after initialization
         private readonly IUserRepository _userRepo; // The IUserRepository interface is injected into the controller through dependency injection
 
-        public UserController(ApplicationDBContext context, IUserRepository userRepository)
+        public UserController(IUserRepository userRepository)
         {
             _userRepo = userRepository; // initialize the user repository through dependency injection
-            _context = context; // initialize the database context through dependency injection
+            //_context = context; // initialize the database context through dependency injection
         }
 
         [HttpGet]
@@ -41,10 +40,10 @@ namespace api.Controllers
         }
 
         [HttpGet]
-        [Route("{id:guid}")] // api/User/{id}
-        public async Task<IActionResult> GetUserById([FromRoute] Guid id)
+        [Route("{userId : guid}")] // api/User/{userId}
+        public async Task<IActionResult> GetUserById([FromRoute] Guid userId)
         {
-            var user = await _userRepo.GetUserByIdAsync(id); // FirstOrDefault also works, but Find is more efficient because it uses the primary key to find the user.
+            var user = await _userRepo.GetUserByIdAsync(userId); // FirstOrDefault also works, but Find is more efficient because it uses the primary key to find the user.
             if (user == null)
             {
                 return NotFound();//404 Not Found status code if the user is not found
@@ -58,16 +57,16 @@ namespace api.Controllers
         public async Task<IActionResult> CreateUser([FromBody] UserInCreate userInCreateObject)
         {
             var user = await _userRepo.CreateUserAsync(userInCreateObject); //map the request body to the User model using the mapper class
-            return CreatedAtAction(nameof(GetUserById), new { id = user.UserId }, user.ToUserInView());
+            return CreatedAtAction(nameof(GetUserById), new { userId = user.UserId }, user.ToUserInView());
             //201 Created status code with the user in the response body
         }
 
 
         [HttpPut]
-        [Route("{id:guid}")]
-        public async Task<IActionResult> UpdateUser([FromRoute] Guid id, [FromBody] UserInUpdate userInUpdateObject)
+        [Route("{userId : guid}")]
+        public async Task<IActionResult> UpdateUser([FromRoute] Guid userId, [FromBody] UserInUpdate userInUpdateObject)
         {
-            var userUpdates = await _userRepo.UpdateUserAsync(id, userInUpdateObject);
+            var userUpdates = await _userRepo.UpdateUserAsync(userId, userInUpdateObject);
             if (userUpdates == null)
             {
                 return NotFound();
@@ -77,10 +76,10 @@ namespace api.Controllers
 
 
         [HttpDelete]
-        [Route("{id:guid}")]
-        public async Task<IActionResult> DeleteUser([FromRoute] Guid id)
+        [Route("{userId : guid}")]
+        public async Task<IActionResult> DeleteUser([FromRoute] Guid userId)
         {
-            var user = await _userRepo.DeleteUserAsync(id);
+            var user = await _userRepo.DeleteUserAsync(userId);
             if (user == null)
             {
                 return NotFound();
