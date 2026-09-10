@@ -18,6 +18,6 @@ namespace api.Models
 
         //navigation property to the post that the comment belongs to.
         //I can get the post of a comment through comment.post, and I can get the user of a comment through comment.post.user.
-        public Posts Posts { get; set; } = null!; // to avoid null reference exception
+        public Post Post { get; set; } = null!; // to avoid null reference exception
     }
 }
