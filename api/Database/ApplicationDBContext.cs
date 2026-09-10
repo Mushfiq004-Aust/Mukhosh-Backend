@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+
+//import the models
 using api.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,13 +11,21 @@ namespace api.Database
 {
     public class ApplicationDBContext : DbContext
     {
-        public ApplicationDBContext(DbContextOptions dbContextOptions) : base(dbContextOptions)
+        public ApplicationDBContext(
+            DbContextOptions<ApplicationDBContext> dbContextOptions)
+            : base(dbContextOptions)
         {
-
         }
-        // all the tables in the database will be created based on the models defined in the api/Models folder.
-        public DbSet<User> Users { get; set; }
-        public DbSet<Posts> Posts { get; set; }
-        public DbSet<Comment> Comments { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder) // for unique constraint on email column in user table
+        {
+            modelBuilder.Entity<User>()
+                .HasIndex(u => u.Email)
+                .IsUnique();
+        }
+
+        public DbSet<User> User { get; set; }
+        public DbSet<Post> Post { get; set; }
+        public DbSet<Comment> Comment { get; set; }
     }
 }
