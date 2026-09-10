@@ -34,5 +34,11 @@ namespace api.Mappers
                 Phone = user.Phone
             };
         }
+
+        public static UserInUpdate ToUserInUpdate(this UserInUpdate user) // response model to the user
+        {
+            //does not really do anything, but it is here for consistency and future use, in case we want to add more properties to the UserInUpdate model.
+            return user;
+        }
     }
 }
