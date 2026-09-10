@@ -1,5 +1,6 @@
 using api;
 using api.Database; // for database context
+using api.Interfaces;
 using api.Repository;
 using Microsoft.EntityFrameworkCore;
 
@@ -22,6 +23,8 @@ builder.Services.AddControllers();
 
 // Add the IUserRepository interface and its implementation to the services collection, so that it can be injected into the controllers.
 builder.Services.AddScoped<IUserRepository, UserRepo>();
+// Add the ICommentRepository interface and its implementation to the services collection, so that it can be injected into the controllers.
+builder.Services.AddScoped<ICommentRepository, CommentRepo>();
 
 var app = builder.Build();
 
