@@ -38,19 +38,16 @@ namespace api.Migrations
                     b.Property<Guid>("PostId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("PostsId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("CommentId");
 
-                    b.HasIndex("PostsId");
+                    b.HasIndex("PostId");
 
-                    b.ToTable("Comments");
+                    b.ToTable("Comment");
                 });
 
-            modelBuilder.Entity("api.Models.Posts", b =>
+            modelBuilder.Entity("api.Models.Post", b =>
                 {
-                    b.Property<Guid>("PostsId")
+                    b.Property<Guid>("PostId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
@@ -68,11 +65,11 @@ namespace api.Migrations
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.HasKey("PostsId");
+                    b.HasKey("PostId");
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Posts");
+                    b.ToTable("Post");
                 });
 
             modelBuilder.Entity("api.Models.User", b =>
@@ -86,7 +83,7 @@ namespace api.Migrations
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Institution")
                         .HasColumnType("nvarchar(max)");
@@ -101,24 +98,27 @@ namespace api.Migrations
 
                     b.HasKey("UserId");
 
-                    b.ToTable("Users");
+                    b.HasIndex("Email")
+                        .IsUnique();
+
+                    b.ToTable("User");
                 });
 
             modelBuilder.Entity("api.Models.Comment", b =>
                 {
-                    b.HasOne("api.Models.Posts", "Posts")
-                        .WithMany("Comments")
-                        .HasForeignKey("PostsId")
+                    b.HasOne("api.Models.Post", "Post")
+                        .WithMany("Comment")
+                        .HasForeignKey("PostId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Posts");
+                    b.Navigation("Post");
                 });
 
-            modelBuilder.Entity("api.Models.Posts", b =>
+            modelBuilder.Entity("api.Models.Post", b =>
                 {
                     b.HasOne("api.Models.User", "User")
-                        .WithMany("Posts")
+                        .WithMany("Post")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -126,14 +126,14 @@ namespace api.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("api.Models.Posts", b =>
+            modelBuilder.Entity("api.Models.Post", b =>
                 {
-                    b.Navigation("Comments");
+                    b.Navigation("Comment");
                 });
 
             modelBuilder.Entity("api.Models.User", b =>
                 {
-                    b.Navigation("Posts");
+                    b.Navigation("Post");
                 });
 #pragma warning restore 612, 618
         }
