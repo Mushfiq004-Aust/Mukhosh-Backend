@@ -29,7 +29,7 @@ namespace api.Controllers
         }
 
         [HttpGet]
-        [Route("{commentId : guid}")]
+        [Route("{commentId:guid}")]
         public async Task<IActionResult> GetCommentById([FromRoute] Guid commentId)
         {
             var comment = await _commentRepo.GetCommentByIdAsync(commentId);
@@ -48,7 +48,7 @@ namespace api.Controllers
         }
 
         [HttpPut]
-        [Route("{commentId : guid}")]
+        [Route("{commentId:guid}")]
         public async Task<IActionResult> UpdateComment([FromRoute] Guid commentId, [FromBody] CommentInUpdate commentInUpdateObject)
         {
             var updatedComment = await _commentRepo.UpdateCommentAsync(commentId, commentInUpdateObject);
@@ -60,7 +60,7 @@ namespace api.Controllers
         }
 
         [HttpDelete]
-        [Route("{commentId : guid}")]
+        [Route("{commentId:guid}")]
         public async Task<IActionResult> DeleteComment([FromRoute] Guid commentId)
         {
             var deletedComment = await _commentRepo.DeleteCommentAsync(commentId);
