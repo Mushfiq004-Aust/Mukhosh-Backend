@@ -20,15 +20,19 @@ namespace api.Controllers
     public class UserController : ControllerBase
     {
         private readonly ApplicationDBContext _context; // immutable variable, cannot be changed after initialization
-        public UserController(ApplicationDBContext context)
+        private readonly IUserRepository _userRepo; // The IUserRepository interface is injected into the controller through dependency injection
+
+        public UserController(ApplicationDBContext context, IUserRepository userRepository)
         {
+            _userRepo = userRepository; // initialize the user repository through dependency injection
             _context = context; // initialize the database context through dependency injection
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAllUsers()
         {
-            var users = await _context.User.ToListAsync(); // only async part is the database call, not the mapping
+            var users = await _userRepo.GetAllUsers(); // only async part is the database call, not the mapping
+            
             var usersInView = users.Select(user => user.ToUserInView());
             //map the user model to the response model using the mapper class
             //Select is used to project each user object to a UserInView object using the ToUserInView extension method defined in the UserMapper class.
