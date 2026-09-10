@@ -17,7 +17,7 @@ namespace api.Models
 
         public required string Password { get; set; } // must provide value, cannot be null
 
-        public string? Institution { get; set; } // If not provided, database get null value
+        public required string Institution { get; set; } // must provide value, cannot be null
 
         public string Phone { get; set; } = string.Empty; // If not provided, database get empty string value
 
