@@ -21,6 +21,7 @@ namespace api.Mappers
                 Phone = user.Phone,
                 CreatedAt = user.CreatedAt,
                 Post = user.Post.Select(p => p.ToPostView()).ToList(),
+                UserId = user.UserId
             };
         }
 

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using api.Database;
 using api.DTOs.User;
+using api.Helper;
 using api.Interfaces;
 using api.Mappers;
 using api.Models;
@@ -22,14 +23,19 @@ namespace api.Repository
             _context = context;
         }
 
-        public async Task<List<User>> GetAllUsersAsync()
+        public async Task<List<User>> GetAllUsersAsync(QueryObject query)
         {
-            return await _context.User.Include(u => u.Post).ToListAsync();
+            var Users = _context.User.Include(u => u.Post).AsQueryable();
+
+            Users = query.OldestFirst ? Users.OrderByDescending(p => p.CreatedAt) : Users.OrderBy(p => p.CreatedAt);
+
+            var SkipSize = (query.PageNumber - 1) * query.PageSize;
+            return await Users.Skip(SkipSize).Take(query.PageSize).ToListAsync();
         }
 
         public async Task<User?> GetUserByIdAsync(Guid userId)
         {
-             return await _context.User.Include(u => u.Post).FirstOrDefaultAsync(u => u.UserId == userId);
+            return await _context.User.Include(u => u.Post).FirstOrDefaultAsync(u => u.UserId == userId);
         }
 
         public async Task<User> CreateUserAsync(UserInCreate user)
@@ -62,7 +68,7 @@ namespace api.Repository
                 return null;
             }
 
-             _context.User.Remove(user);
+            _context.User.Remove(user);
             // remove is not async, because it only marks the entity for deletion, and does not actually delete it from the database until SaveChangesAsync is called.
             await _context.SaveChangesAsync();
 

@@ -51,12 +51,17 @@ namespace api.Repository
 
             }
 
+            if(!string.IsNullOrWhiteSpace(query.Institution))
+            {
+                Posts = Posts.Where(p => p.User.Institution.Contains(query.Institution));
+            }
+
             //Sorting in style. Because I Have a Competetive Programming Background ;)
             Posts = query.OldestFirst ? Posts.OrderByDescending(p => p.CreatedAt) : Posts.OrderBy(p => p.CreatedAt);
 
             //Pagination
             var SkipSize = (query.PageNumber - 1) * query.PageSize;
-            return await Posts.Skip(SkipSize).Take(query.PageNumber).ToListAsync();
+            return await Posts.Skip(SkipSize).Take(query.PageSize).ToListAsync();
         }
 
         public async Task<Post?> GetPostByIdAsync(Guid postId)

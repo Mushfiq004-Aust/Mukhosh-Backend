@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using api.DTOs.Comment;
+using api.Helper;
 using api.Models;
 
 //Interface for Comment Repository
@@ -15,7 +16,7 @@ namespace api.Interfaces
 {
     public interface ICommentRepository
     {
-        Task<List<Comment>> GetAllCommentsAsync();
+        Task<List<Comment>> GetAllCommentsAsync(QueryObject query);
         Task<Comment?> GetCommentByIdAsync(Guid commentId);
         Task<Comment> CreateCommentAsync(CommentInCreate comment);
         Task<Comment?> UpdateCommentAsync(Guid commentId, CommentInUpdate comment);

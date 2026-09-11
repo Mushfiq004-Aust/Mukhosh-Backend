@@ -17,7 +17,8 @@ namespace api.Mappers
                 Content = post.Content,
                 CreatedAt = post.CreatedAt,
                 Vibe = post.Vibe,
-                Comments = post.Comment.Select(c => c.ToCommentView()).ToList()
+                Comments = post.Comment.Select(c => c.ToCommentView()).ToList(),
+                PostId = post.PostId
             };
         }
 

@@ -14,7 +14,8 @@ namespace api.Mappers
             return new CommentInView
             {
                 Content = comment.Content,
-                CreatedAt = comment.CreatedAt
+                CreatedAt = comment.CreatedAt,
+                CommentId = comment.CommentId
             };
         }
 

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 // for database context
 using api.Database;
 using api.DTOs.User;
+using api.Helper;
 using api.Interfaces;
 using api.Mappers;
 using api.Models;
@@ -29,9 +30,9 @@ namespace api.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllUsers()
+        public async Task<IActionResult> GetAllUsers(QueryObject query)
         {
-            var users = await _userRepo.GetAllUsersAsync(); // only async part is the database call, not the mapping
+            var users = await _userRepo.GetAllUsersAsync(query); // only async part is the database call, not the mapping
 
             var usersInView = users.Select(user => user.ToUserInView());
             //map the user model to the response model using the mapper class
@@ -91,7 +92,7 @@ namespace api.Controllers
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
-                
+
             var user = await _userRepo.DeleteUserAsync(userId);
             if (user == null)
             {

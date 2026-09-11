@@ -15,6 +15,8 @@ namespace api.Helper
 
         public int PageSize { get; set; } = 20;
 
+        public string? Institution { get; set; } = null;
+
 
     }
 }

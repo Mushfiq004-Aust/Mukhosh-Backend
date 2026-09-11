@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using api.DTOs.User;
+using api.Helper;
 using api.Models;
 
 //Interface for User Repository
@@ -15,7 +16,7 @@ namespace api.Interfaces
 {
     public interface IUserRepository
     {
-        Task<List<User>> GetAllUsersAsync();
+        Task<List<User>> GetAllUsersAsync(QueryObject query);
         //Method to retrieve all users from the repository. 
         //It returns a Task that resolves to a List of User objects, allowing for asynchronous operation.
 

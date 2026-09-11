@@ -13,5 +13,7 @@ namespace api.DTOs.Comment
         [MaxLength(500, ErrorMessage = "Content cannot exceed 500 characters.")]
         public required string Content { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.Now;
+
+        public Guid CommentId { get; set; }
     }
 }

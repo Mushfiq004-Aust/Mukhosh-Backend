@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using api.Database;
 using api.DTOs.Comment;
+using api.Helper;
 using api.Interfaces;
 using api.Mappers;
 using api.Models;
@@ -20,9 +21,14 @@ namespace api.Repository
             _context = context;
         }
 
-        public async Task<List<Comment>> GetAllCommentsAsync()
+        public async Task<List<Comment>> GetAllCommentsAsync(QueryObject query)
         {
-            return await _context.Comment.ToListAsync();
+            var Comments = _context.Comment.AsQueryable();
+
+            Comments = query.OldestFirst ? Comments.OrderByDescending(p => p.CreatedAt) : Comments.OrderBy(p => p.CreatedAt);
+
+            var SkipSize = (query.PageNumber - 1) * query.PageSize;
+            return await Comments.Skip(SkipSize).Take(query.PageSize).ToListAsync();
         }
 
         public async Task<Comment?> GetCommentByIdAsync(Guid commentId)

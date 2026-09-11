@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using api.DTOs.Comment;
+using api.Helper;
 using api.Interfaces;
 using api.Mappers;
 using Microsoft.AspNetCore.Mvc;
@@ -23,9 +24,9 @@ namespace api.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllComments()
+        public async Task<IActionResult> GetAllComments(QueryObject query)
         {
-            var comments = await _commentRepo.GetAllCommentsAsync();
+            var comments = await _commentRepo.GetAllCommentsAsync(query);
             var commentViews = comments.Select(c => c.ToCommentView()).ToList();
             return Ok(commentViews);
         }
@@ -85,7 +86,7 @@ namespace api.Controllers
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
-                
+
             var deletedComment = await _commentRepo.DeleteCommentAsync(commentId);
             if (deletedComment == null)
             {

@@ -32,5 +32,7 @@ namespace api.DTOs.User
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 
         public List<PostInView> Post { get; set; } = new List<PostInView>();
+
+        public Guid UserId { get; set; }
     }
 }

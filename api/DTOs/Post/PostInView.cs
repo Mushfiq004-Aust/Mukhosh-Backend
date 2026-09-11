@@ -27,5 +27,7 @@ namespace api.DTOs.Post
 
         //add comments too
         public List<CommentInView> Comments { get; set; } = new List<CommentInView>();
+
+        public Guid PostId { get; set; }
     }
 }
