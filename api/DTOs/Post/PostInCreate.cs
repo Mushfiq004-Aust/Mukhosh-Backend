@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
-using api.Models;
 
 namespace api.DTOs.Post
 {
-    
+
     public class PostInCreate
     {
         [Required]
@@ -21,7 +20,8 @@ namespace api.DTOs.Post
         public required string Content { get; set; }
 
         [Required]
-        public Vibe Vibe { get; set; } = Vibe.Mixed;
+        [RegularExpression("^(Positive|Negative|Mixed)$", ErrorMessage = "Vibe must be Positive, Negative, or Mixed.")]
+        public string Vibe { get; set; } = "Mixed";
 
         [Required]
         public Guid UserId { get; set; }

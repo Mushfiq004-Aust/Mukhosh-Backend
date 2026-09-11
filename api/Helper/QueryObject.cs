@@ -7,6 +7,14 @@ namespace api.Helper
 {
     public class QueryObject
     {
-        public string VibeFilter { get; set; } = "Mixed";
+        public string? VibeFilter { get; set; } = null;
+
+        public bool OldestFirst { get; set; } = false;
+
+        public int PageNumber { get; set; } = 1;
+
+        public int PageSize { get; set; } = 20;
+
+
     }
 }

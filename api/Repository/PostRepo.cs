@@ -47,14 +47,16 @@ namespace api.Repository
 
             if (!string.IsNullOrWhiteSpace(query.VibeFilter))
             {
-                //Make Vibefilter from string to an Enum
-                if (Enum.TryParse<Vibe>(query.VibeFilter, true, out var vibe))
-                {
-                    Posts = Posts.Where(p => p.Vibe == vibe);
-                }
+                Posts = Posts.Where(p => p.Vibe.Contains(query.VibeFilter));
+
             }
 
-            return await Posts.ToListAsync();
+            //Sorting in style. Because I Have a Competetive Programming Background ;)
+            Posts = query.OldestFirst ? Posts.OrderByDescending(p => p.CreatedAt) : Posts.OrderBy(p => p.CreatedAt);
+
+            //Pagination
+            var SkipSize = (query.PageNumber - 1) * query.PageSize;
+            return await Posts.Skip(SkipSize).Take(query.PageNumber).ToListAsync();
         }
 
         public async Task<Post?> GetPostByIdAsync(Guid postId)
