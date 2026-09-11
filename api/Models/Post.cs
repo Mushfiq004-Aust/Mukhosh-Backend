@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 
 namespace api.Models
 {
+
+    public enum Vibe{ Positive, Negative, Mixed }
     public class Post
     {
         public Guid PostId { get; set; } // must provide value, cannot be null, must match the classname 
@@ -12,6 +14,8 @@ namespace api.Models
         public required string Title { get; set; } // must provide value, cannot be null
 
         public required string Content { get; set; } // must provide value, cannot be null
+
+        public required Vibe Vibe { get; set; } = Vibe.Mixed;
 
         public DateTime CreatedAt { get; set; } = DateTime.Now; // If not provided, database get current date and time value
 
@@ -25,6 +29,7 @@ namespace api.Models
 
         //navigation property to the user who created the post.Through post.user, I can access the user who created the post.
         public User User { get; set; } = null!; // to avoid null reference exception
+
         
     }
 }
