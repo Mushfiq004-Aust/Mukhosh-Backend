@@ -11,6 +11,13 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+//this LoopHandling.Ignore is to avoid the circular reference error when serializing the objects to JSON.
+//Basically, when you have two objects that reference each other
+//it can create an infinite loop when trying to serialize them to JSON.
+builder.Services.AddControllers().AddNewtonsoftJson(options =>
+{
+    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+});
 
 // Add the ApplicationDBContext to the services collection, so that it can be injected into the controllers.
 builder.Services.AddDbContext<ApplicationDBContext>(options =>
@@ -27,6 +34,8 @@ builder.Services.AddScoped<IUserRepository, UserRepo>();
 builder.Services.AddScoped<ICommentRepository, CommentRepo>();
 // Add the IPostRepository interface and its implementation to the services collection, so that it can be injected into the controllers.
 builder.Services.AddScoped<IPostRepository, PostRepo>();
+
+
 
 var app = builder.Build();
 
