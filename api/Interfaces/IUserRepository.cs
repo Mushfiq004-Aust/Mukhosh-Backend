@@ -11,7 +11,7 @@ using api.Models;
 //This allows for flexibility and easier testing, as we can swap out different implementations of IUserRepository
 //without changing the code that depends on it.
 
-namespace api
+namespace api.Interfaces
 {
     public interface IUserRepository
     {
