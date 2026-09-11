@@ -27,12 +27,10 @@ namespace api.Mappers
             };
         }
 
-        public static Comment ToCommentUpdate(this CommentInUpdate commentInUpdate)
+        public static Comment ToCommentUpdate(this CommentInUpdate commentInUpdate, Comment comment)
         {
-            return new Comment
-            {
-                Content = commentInUpdate.Content
-            };
+            comment.Content = commentInUpdate.Content;
+            return comment;
         }
     }
 }
