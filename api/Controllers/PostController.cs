@@ -34,6 +34,8 @@ namespace api.Controllers
         [Route("{postId:guid}")]
         public async Task<IActionResult> GetPostById([FromRoute] Guid postId)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
             var post = await _postRepo.GetPostByIdAsync(postId);
             if (post == null)
             {
@@ -46,6 +48,8 @@ namespace api.Controllers
         [HttpPost]
         public async Task<IActionResult> CreatePost([FromBody] PostInCreate postInCreateObject)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
             //Check if the user exists before creating a post for it
             var existingUser = await _userRepo.GetUserByIdAsync(postInCreateObject.UserId);
@@ -63,6 +67,9 @@ namespace api.Controllers
         [Route("{postId:guid}")]
         public async Task<IActionResult> UpdatePost([FromRoute] Guid postId, [FromBody] PostInUpdate postInUpdateObject)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
             var post = await _postRepo.UpdatePostAsync(postId, postInUpdateObject);
             if (post == null)
             {
@@ -76,6 +83,9 @@ namespace api.Controllers
         [Route("{postId:guid}")]
         public async Task<IActionResult> DeletePost([FromRoute] Guid postId)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+                
             var post = await _postRepo.DeletePostAsync(postId);
             if (post == null)
             {

@@ -34,6 +34,9 @@ namespace api.Controllers
         [Route("{commentId:guid}")]
         public async Task<IActionResult> GetCommentById([FromRoute] Guid commentId)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
             var comment = await _commentRepo.GetCommentByIdAsync(commentId);
             if (comment == null)
             {
@@ -45,6 +48,9 @@ namespace api.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateComment([FromBody] CommentInCreate commentInCreateObject)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
             //Check if the post exists before creating a comment for it
             var existingPost = await _postRepo.GetPostByIdAsync(commentInCreateObject.PostId);
             //could use anyasync method to check if the post exists, but this is a simple way to do it
@@ -62,6 +68,9 @@ namespace api.Controllers
         [Route("{commentId:guid}")]
         public async Task<IActionResult> UpdateComment([FromRoute] Guid commentId, [FromBody] CommentInUpdate commentInUpdateObject)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
             var updatedComment = await _commentRepo.UpdateCommentAsync(commentId, commentInUpdateObject);
             if (updatedComment == null)
             {
@@ -74,6 +83,9 @@ namespace api.Controllers
         [Route("{commentId:guid}")]
         public async Task<IActionResult> DeleteComment([FromRoute] Guid commentId)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+                
             var deletedComment = await _commentRepo.DeleteCommentAsync(commentId);
             if (deletedComment == null)
             {

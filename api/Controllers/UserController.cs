@@ -44,6 +44,9 @@ namespace api.Controllers
         [Route("{userId:guid}")] // api/User/{userId}
         public async Task<IActionResult> GetUserById([FromRoute] Guid userId)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
             var user = await _userRepo.GetUserByIdAsync(userId); // FirstOrDefault also works, but Find is more efficient because it uses the primary key to find the user.
             if (user == null)
             {
@@ -57,6 +60,9 @@ namespace api.Controllers
         //Taking request body object and mapping it to the User model using the mapper class, then saving it to the database.
         public async Task<IActionResult> CreateUser([FromBody] UserInCreate userInCreateObject)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
             var user = await _userRepo.CreateUserAsync(userInCreateObject); //map the request body to the User model using the mapper class
             return CreatedAtAction(nameof(GetUserById), new { userId = user.UserId }, user.ToUserInView());
             //201 Created status code with the user in the response body
@@ -67,6 +73,9 @@ namespace api.Controllers
         [Route("{userId:guid}")]
         public async Task<IActionResult> UpdateUser([FromRoute] Guid userId, [FromBody] UserInUpdate userInUpdateObject)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
             var userUpdates = await _userRepo.UpdateUserAsync(userId, userInUpdateObject);
             if (userUpdates == null)
             {
@@ -80,6 +89,9 @@ namespace api.Controllers
         [Route("{userId:guid}")]
         public async Task<IActionResult> DeleteUser([FromRoute] Guid userId)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+                
             var user = await _userRepo.DeleteUserAsync(userId);
             if (user == null)
             {
