@@ -15,7 +15,8 @@ namespace api.Mappers
             {
                 Title = post.Title,
                 Content = post.Content,
-                CreatedAt = post.CreatedAt
+                CreatedAt = post.CreatedAt,
+                Comments = post.Comment.Select(c => c.ToCommentView()).ToList()
             };
         }
 
