@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using api.DTOs.Post;
+using api.Helper;
 using api.Interfaces;
 using api.Mappers;
 using Microsoft.AspNetCore.Mvc;
@@ -23,9 +24,9 @@ namespace api.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllPosts()
+        public async Task<IActionResult> GetAllPosts([FromQuery] QueryObject query)
         {
-            var posts = await _postRepo.GetAllPostsAsync();
+            var posts = await _postRepo.GetAllPostsAsync(query);
             var postView = posts.Select(p => p.ToPostView()).ToList();
             return Ok(postView);
         }
