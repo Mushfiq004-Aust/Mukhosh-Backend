@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using api.Database;
 using api.DTOs.Post;
+using api.Helper;
 using api.Interfaces;
 using api.Mappers;
 using api.Models;
@@ -40,16 +41,27 @@ namespace api.Repository
             return post;
         }
 
-        public async Task<List<Post>> GetAllPostsAsync()
+        public async Task<List<Post>> GetAllPostsAsync(QueryObject query)
         {
-            return await _context.Post.Include(p => p.Comment).ToListAsync();
+            var Posts = _context.Post.Include(p => p.Comment).AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(query.VibeFilter))
+            {
+                //Make Vibefilter from string to an Enum
+                if (Enum.TryParse<Vibe>(query.VibeFilter, true, out var vibe))
+                {
+                    Posts = Posts.Where(p => p.Vibe == vibe);
+                }
+            }
+
+            return await Posts.ToListAsync();
         }
 
         public async Task<Post?> GetPostByIdAsync(Guid postId)
         {
             return await _context.Post.Include(p => p.Comment).FirstOrDefaultAsync(p => p.PostId == postId);
         }
-         
+
         public async Task<Post?> UpdatePostAsync(Guid postId, PostInUpdate post)
         {
             var existingPost = await _context.Post.FindAsync(postId);
@@ -63,4 +75,4 @@ namespace api.Repository
             return existingPost;
         }
     }
-} 
+}
