@@ -14,10 +14,12 @@ namespace api.Controllers
     public class PostController : ControllerBase
     {
         private readonly IPostRepository _postRepo;
+        private readonly IUserRepository _userRepo;
 
-        public PostController(IPostRepository postRepository)
+        public PostController(IPostRepository postRepository, IUserRepository userRepository)
         {
             _postRepo = postRepository;
+            _userRepo = userRepository;
         }
 
         [HttpGet]
@@ -44,6 +46,15 @@ namespace api.Controllers
         [HttpPost]
         public async Task<IActionResult> CreatePost([FromBody] PostInCreate postInCreateObject)
         {
+
+            //Check if the user exists before creating a post for it
+            var existingUser = await _userRepo.GetUserByIdAsync(postInCreateObject.UserId);
+            //Could use anyasync method to check if the user exists, but this is a simple way to do it
+            if (existingUser == null)
+            {
+                return BadRequest("User not found");
+            }
+
             var post = await _postRepo.CreatePostAsync(postInCreateObject);
             return CreatedAtAction(nameof(GetPostById), new { postId = post.PostId }, post.ToPostView());
         }
