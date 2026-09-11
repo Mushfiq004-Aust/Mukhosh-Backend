@@ -16,6 +16,7 @@ namespace api.Mappers
                 Title = post.Title,
                 Content = post.Content,
                 CreatedAt = post.CreatedAt,
+                Vibe = post.Vibe,
                 Comments = post.Comment.Select(c => c.ToCommentView()).ToList()
             };
         }
@@ -26,6 +27,7 @@ namespace api.Mappers
             {
                 Title = postInCreate.Title,
                 Content = postInCreate.Content,
+                Vibe = postInCreate.Vibe,
                 UserId = postInCreate.UserId
             };
         }
@@ -34,6 +36,7 @@ namespace api.Mappers
         {
             post.Title = postInUpdate.Title;
             post.Content = postInUpdate.Content;
+            post.Vibe = postInUpdate.Vibe;
             return post;
         }
     }
