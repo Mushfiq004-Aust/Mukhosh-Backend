@@ -47,8 +47,7 @@ namespace api.Repository
                 return null;
             }
 
-            existingUser.Name = user.Name;
-            existingUser.Phone = user.Phone;
+            existingUser = user.ToUserInUpdate(existingUser); //map the request body to the User model using the mapper class
 
             await _context.SaveChangesAsync();
             return existingUser;
