@@ -14,6 +14,6 @@ namespace api.DTOs.User
         public string Phone { get; set; } = string.Empty;
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 
-        public List<PostInView> Post { get; set; }
+        public List<PostInView> Post { get; set; } = new List<PostInView>();
     }
 }

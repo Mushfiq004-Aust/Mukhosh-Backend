@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 // for database context
 using api.Database;
 using api.DTOs.User;
+using api.Interfaces;
 using api.Mappers;
 using api.Models;
 using Microsoft.AspNetCore.Mvc;

@@ -13,6 +13,6 @@ namespace api.DTOs.Post
         public DateTime CreatedAt { get; set; } = DateTime.Now;
         
         //add comments too
-        public List<CommentInView> Comments { get; set; }
+        public List<CommentInView> Comments { get; set; } = new List<CommentInView>();
     }
 }
