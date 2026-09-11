@@ -42,14 +42,14 @@ namespace api.Repository
 
         public async Task<List<Post>> GetAllPostsAsync()
         {
-            return await _context.Post.ToListAsync();
+            return await _context.Post.Include(p => p.Comment).ToListAsync();
         }
 
         public async Task<Post?> GetPostByIdAsync(Guid postId)
         {
-            return await _context.Post.FindAsync(postId);
+            return await _context.Post.Include(p => p.Comment).FirstOrDefaultAsync(p => p.PostId == postId);
         }
-
+         
         public async Task<Post?> UpdatePostAsync(Guid postId, PostInUpdate post)
         {
             var existingPost = await _context.Post.FindAsync(postId);
@@ -63,4 +63,4 @@ namespace api.Repository
             return existingPost;
         }
     }
-}
+} 
