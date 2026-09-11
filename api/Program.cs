@@ -25,6 +25,8 @@ builder.Services.AddControllers();
 builder.Services.AddScoped<IUserRepository, UserRepo>();
 // Add the ICommentRepository interface and its implementation to the services collection, so that it can be injected into the controllers.
 builder.Services.AddScoped<ICommentRepository, CommentRepo>();
+// Add the IPostRepository interface and its implementation to the services collection, so that it can be injected into the controllers.
+builder.Services.AddScoped<IPostRepository, PostRepo>();
 
 var app = builder.Build();
 
