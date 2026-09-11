@@ -59,7 +59,7 @@ namespace api.Repository
                 return null;
             }
 
-            existingComment.Content = comment.Content;
+            existingComment = comment.ToCommentUpdate(existingComment);
 
             await _context.SaveChangesAsync();
             return existingComment;
