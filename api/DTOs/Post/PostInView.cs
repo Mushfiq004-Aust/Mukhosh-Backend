@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using api.DTOs.Comment;
+using api.Models;
 
 namespace api.DTOs.Post
 {
@@ -18,6 +19,9 @@ namespace api.DTOs.Post
         [MinLength(5, ErrorMessage = "Content must be at least 5 character long.")]
         [MaxLength(5000, ErrorMessage = "Content cannot exceed 5000 characters.")]
         public required string Content { get; set; }
+
+        [Required]
+        public Vibe Vibe { get; set; } = Vibe.Mixed;
         
         public DateTime CreatedAt { get; set; } = DateTime.Now;
         
