@@ -14,10 +14,12 @@ namespace api.Controllers
     public class CommentController : ControllerBase
     {
         private readonly ICommentRepository _commentRepo;
+        private readonly IPostRepository _postRepo;
 
-        public CommentController(ICommentRepository commentRepository)
+        public CommentController(ICommentRepository commentRepository, IPostRepository postRepository)
         {
             _commentRepo = commentRepository;
+            _postRepo = postRepository;
         }
 
         [HttpGet]
@@ -43,6 +45,15 @@ namespace api.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateComment([FromBody] CommentInCreate commentInCreateObject)
         {
+            //Check if the post exists before creating a comment for it
+            var existingPost = await _postRepo.GetPostByIdAsync(commentInCreateObject.PostId);
+            //could use anyasync method to check if the post exists, but this is a simple way to do it
+
+            if (existingPost == null)
+            {
+                return BadRequest("Post not found");
+            }
+
             var comment = await _commentRepo.CreateCommentAsync(commentInCreateObject);
             return CreatedAtAction(nameof(GetCommentById), new { commentId = comment.CommentId }, comment.ToCommentView());
         }
