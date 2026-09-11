@@ -35,9 +35,11 @@ namespace api.Mappers
             };
         }
 
-        public static UserInUpdate ToUserInUpdate(this UserInUpdate user) // response model to the user
+        public static User ToUserInUpdate(this UserInUpdate userInUpdate, User user) // response model to the user
         {
             //does not really do anything, but it is here for consistency and future use, in case we want to add more properties to the UserInUpdate model.
+            user.Name = userInUpdate.Name;
+            user.Phone = userInUpdate.Phone;
             return user;
         }
     }
