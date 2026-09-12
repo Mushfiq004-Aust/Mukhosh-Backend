@@ -24,7 +24,7 @@ namespace api.Models
         public List<Comment> Comment { get; set; } = new List<Comment>();
 
         //foreign key relationship between the posts and users tables.
-        public Guid UserId { get; set; } // must provide value, cannot be null
+        public string? UserId { get; set; } // must provide value, cannot be null
 
         //navigation property to the user who created the post.Through post.user, I can access the user who created the post.
         public User User { get; set; } = null!; // to avoid null reference exception

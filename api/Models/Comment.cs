@@ -19,5 +19,11 @@ namespace api.Models
         //navigation property to the post that the comment belongs to.
         //I can get the post of a comment through comment.post, and I can get the user of a comment through comment.post.user.
         public Post Post { get; set; } = null!; // to avoid null reference exception
+
+        //foreign key relationship between the posts and users tables.
+        public string? UserId { get; set; } // must provide value, cannot be null
+
+        //navigation property to the user who created the post.Through post.user, I can access the user who created the post.
+        public User User { get; set; } = null!; // to avoid null reference exception
     }
 }

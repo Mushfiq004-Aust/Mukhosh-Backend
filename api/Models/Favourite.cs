@@ -7,6 +7,7 @@ namespace api.Models
 {
     public class Favourite
     {
-        public int MyProperty { get; set; }
+        // public int MyProperty { get; set; }
+        // public int MyProperty { get; set; }
     }
 }

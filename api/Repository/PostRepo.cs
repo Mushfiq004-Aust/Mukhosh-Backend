@@ -51,7 +51,7 @@ namespace api.Repository
 
             }
 
-            if(!string.IsNullOrWhiteSpace(query.Institution))
+            if (!string.IsNullOrWhiteSpace(query.Institution))
             {
                 Posts = Posts.Where(p => p.User.Institution.Contains(query.Institution));
             }

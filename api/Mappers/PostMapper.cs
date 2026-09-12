@@ -9,7 +9,7 @@ namespace api.Mappers
 {
     public static class PostMapper
     {
-        public static PostInView ToPostView(this Post post)
+        public static PostInView ToSinglePostView(this Post post)
         {
             return new PostInView
             {
@@ -18,6 +18,18 @@ namespace api.Mappers
                 CreatedAt = post.CreatedAt,
                 Vibe = post.Vibe,
                 Comments = post.Comment.Select(c => c.ToCommentView()).ToList(),
+                PostId = post.PostId
+            };
+        }
+
+        public static PostInView ToPostView(this Post post)
+        {
+            return new PostInView
+            {
+                Title = post.Title,
+                Content = post.Content,
+                CreatedAt = post.CreatedAt,
+                Vibe = post.Vibe,
                 PostId = post.PostId
             };
         }

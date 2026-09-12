@@ -24,8 +24,8 @@ namespace api.Controllers
             _userRepo = userRepository;
         }
 
-        [HttpGet]
         [Authorize]
+        [HttpGet]
         public async Task<IActionResult> GetAllPosts([FromQuery] QueryObject query)
         {
             var posts = await _postRepo.GetAllPostsAsync(query);
@@ -33,6 +33,7 @@ namespace api.Controllers
             return Ok(postView);
         }
 
+        [Authorize]
         [HttpGet]
         [Route("{postId:guid}")]
         public async Task<IActionResult> GetPostById([FromRoute] Guid postId)
@@ -45,9 +46,10 @@ namespace api.Controllers
                 return NotFound();
             }
 
-            return Ok(post.ToPostView());
+            return Ok(post.ToSinglePostView());
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> CreatePost([FromBody] PostInCreate postInCreateObject)
         {
@@ -63,9 +65,10 @@ namespace api.Controllers
             }
 
             var post = await _postRepo.CreatePostAsync(postInCreateObject);
-            return CreatedAtAction(nameof(GetPostById), new { postId = post.PostId }, post.ToPostView());
+            return CreatedAtAction(nameof(GetPostById), new { postId = post.PostId }, post.ToSinglePostView());
         }
 
+        [Authorize]
         [HttpPut]
         [Route("{postId:guid}")]
         public async Task<IActionResult> UpdatePost([FromRoute] Guid postId, [FromBody] PostInUpdate postInUpdateObject)
@@ -79,9 +82,10 @@ namespace api.Controllers
                 return NotFound();
             }
 
-            return Ok(post.ToPostView());
+            return Ok(post.ToSinglePostView());
         }
 
+        [Authorize]
         [HttpDelete]
         [Route("{postId:guid}")]
         public async Task<IActionResult> DeletePost([FromRoute] Guid postId)

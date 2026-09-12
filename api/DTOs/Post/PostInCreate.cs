@@ -24,6 +24,6 @@ namespace api.DTOs.Post
         public string Vibe { get; set; } = "Mixed";
 
         [Required]
-        public Guid UserId { get; set; }
+        public string? UserId { get; set; }
     }
 }
