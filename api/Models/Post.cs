@@ -29,6 +29,8 @@ namespace api.Models
         //navigation property to the user who created the post.Through post.user, I can access the user who created the post.
         public User User { get; set; } = null!; // to avoid null reference exception
 
+        public List<Favourite> Favourite { get; set; } = new List<Favourite>();
+
 
     }
 }
