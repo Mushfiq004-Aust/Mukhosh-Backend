@@ -7,6 +7,7 @@ using api.DTOs.Review;
 using api.Interfaces;
 using api.Mappers;
 using api.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace api.Repository
 {
