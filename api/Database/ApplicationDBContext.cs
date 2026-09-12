@@ -23,6 +23,19 @@ namespace api.Database
         {
             base.OnModelCreating(modelBuilder);
 
+            modelBuilder.Entity<Favourite>(x => x.HasKey(f => new { f.UserId, f.PostId }));
+
+            modelBuilder.Entity<Favourite>()
+            .HasOne(u => u.User)
+            .WithMany(u => u.Favourite)
+            .HasForeignKey(u => u.UserId);
+
+            modelBuilder.Entity<Favourite>()
+            .HasOne(u => u.Post)
+            .WithMany(u => u.Favourite)
+            .HasForeignKey(u => u.PostId);
+
+
             List<IdentityRole> roles = new List<IdentityRole>
             {
                 new IdentityRole
@@ -46,5 +59,6 @@ namespace api.Database
         public DbSet<User> User { get; set; }
         public DbSet<Post> Post { get; set; }
         public DbSet<Comment> Comment { get; set; }
+        public DbSet<Favourite> Favourite { get; set; }
     }
 }

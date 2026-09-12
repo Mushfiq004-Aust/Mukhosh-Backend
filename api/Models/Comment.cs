@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace api.Models
 {
+    [Table("Comments")]
     public class Comment
     {
         public Guid CommentId { get; set; } // must provide value, cannot be null, must match the classname 

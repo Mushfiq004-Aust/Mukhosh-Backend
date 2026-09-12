@@ -84,6 +84,8 @@ builder.Services.AddScoped<IPostRepository, PostRepo>();
 
 builder.Services.AddScoped<ITokenService, TokenService>();
 
+builder.Services.AddScoped<IFavouriteRepository, FavouriteRepo>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
