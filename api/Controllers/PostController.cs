@@ -6,6 +6,7 @@ using api.DTOs.Post;
 using api.Helper;
 using api.Interfaces;
 using api.Mappers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace api.Controllers
@@ -24,6 +25,7 @@ namespace api.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> GetAllPosts([FromQuery] QueryObject query)
         {
             var posts = await _postRepo.GetAllPostsAsync(query);
@@ -86,7 +88,7 @@ namespace api.Controllers
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
-                
+
             var post = await _postRepo.DeletePostAsync(postId);
             if (post == null)
             {
