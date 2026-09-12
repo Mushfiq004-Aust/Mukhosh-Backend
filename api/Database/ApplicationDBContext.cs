@@ -36,6 +36,21 @@ namespace api.Database
             .HasForeignKey(u => u.PostId);
 
 
+            modelBuilder.Entity<Review>()
+                .HasIndex(r => new { r.UserId, r.UniversityId })
+                .IsUnique();
+
+            modelBuilder.Entity<Review>()
+                .HasOne(r => r.University)
+                .WithMany(u => u.Review)
+                .HasForeignKey(r => r.UniversityId);
+
+            modelBuilder.Entity<Review>()
+                .HasOne(r => r.User)
+                .WithMany()
+                .HasForeignKey(r => r.UserId);
+
+
             List<IdentityRole> roles = new List<IdentityRole>
             {
                 new IdentityRole
@@ -60,5 +75,7 @@ namespace api.Database
         public DbSet<Post> Post { get; set; }
         public DbSet<Comment> Comment { get; set; }
         public DbSet<Favourite> Favourite { get; set; }
+        public object University { get; internal set; }
+        public DbSet<Review> Review { get; set; }
     }
 }
