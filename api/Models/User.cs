@@ -4,9 +4,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Identity;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace api.Models
 {
+    [Table("Users")]
     public class User : IdentityUser
     {
         public required string FirstName { get; set; } // must provide value, cannot be null
