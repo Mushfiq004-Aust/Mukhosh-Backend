@@ -5,11 +5,13 @@ using System.Threading.Tasks;
 
 //import the models
 using api.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace api.Database
 {
-    public class ApplicationDBContext : DbContext
+    public class ApplicationDBContext : IdentityDbContext<User>
     {
         public ApplicationDBContext(
             DbContextOptions<ApplicationDBContext> dbContextOptions)
@@ -17,15 +19,28 @@ namespace api.Database
         {
         }
 
-
-        //override the OnModelCreating method to configure the model
-        //Making sure that the email column in the user table is unique, so that no two users can have the same email address.
-        protected override void OnModelCreating(ModelBuilder modelBuilder) // for unique constraint on email column in user table
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<User>()
-                .HasIndex(u => u.Email)
-                .IsUnique();
+            base.OnModelCreating(modelBuilder);
+
+            List<IdentityRole> roles = new List<IdentityRole>
+            {
+                new IdentityRole
+                {
+                    Name = "Admin",
+                    NormalizedName = "ADMIN"
+                },
+
+                new IdentityRole
+                {
+                    Name = "User",
+                    NormalizedName = "USER"
+                },
+
+            };
+            modelBuilder.Entity<IdentityRole>().HasData(roles);
         }
+
 
         //DbSet properties for each model class, representing the tables in the database
         public DbSet<User> User { get; set; }
