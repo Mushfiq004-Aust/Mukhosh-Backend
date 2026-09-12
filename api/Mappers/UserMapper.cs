@@ -12,7 +12,7 @@ namespace api.Mappers
     // its an extension class, so it should be static, because it will not be instantiated, but its methods will be called directly on the class itself.
     public static class UserMapper
     {
-        public static UserInView ToUserInView(this User user) // response model to the user
+        public static UserInView ToSingleUserInView(this User user) // response model to the user
         {
             return new UserInView
             {
@@ -24,6 +24,21 @@ namespace api.Mappers
                 PhoneNumber = user.PhoneNumber,
                 CreatedAt = user.CreatedAt,
                 Post = user.Post.Select(p => p.ToPostView()).ToList(),
+                UserId = user.Id
+            };
+        }
+
+        public static UserInView ToUserInView(this User user) // response model to the user
+        {
+            return new UserInView
+            {
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                UserName = user.UserName,
+                Email = user.Email,
+                Institution = user.Institution,
+                PhoneNumber = user.PhoneNumber,
+                CreatedAt = user.CreatedAt,
                 UserId = user.Id
             };
         }

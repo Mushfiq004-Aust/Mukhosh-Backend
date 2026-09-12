@@ -64,7 +64,7 @@ namespace api.Controllers
             {
                 return NotFound();//404 Not Found status code if the user is not found
             }
-            return Ok(user.ToUserInView()); //200 OK status code with the user in the response body
+            return Ok(user.ToSingleUserInView()); //200 OK status code with the user in the response body
         }
 
         [Authorize]
@@ -86,7 +86,7 @@ namespace api.Controllers
             {
                 return NotFound();
             }
-            return Ok(userUpdates.ToUserInView());
+            return Ok(userUpdates.ToSingleUserInView());
         }
 
         [Authorize]
