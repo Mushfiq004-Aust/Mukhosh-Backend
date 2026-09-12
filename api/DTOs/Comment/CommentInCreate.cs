@@ -15,5 +15,8 @@ namespace api.DTOs.Comment
 
         [Required]
         public Guid PostId { get; set; } // must provide value, cannot be null
+
+        [Required]
+        public string? UserId { get; set; }
     }
 }

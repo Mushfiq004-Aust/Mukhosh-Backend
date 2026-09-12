@@ -6,6 +6,7 @@ using api.DTOs.Comment;
 using api.Helper;
 using api.Interfaces;
 using api.Mappers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace api.Controllers
@@ -23,6 +24,7 @@ namespace api.Controllers
             _postRepo = postRepository;
         }
 
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> GetAllComments(QueryObject query)
         {
@@ -31,6 +33,7 @@ namespace api.Controllers
             return Ok(commentViews);
         }
 
+        [Authorize]
         [HttpGet]
         [Route("{commentId:guid}")]
         public async Task<IActionResult> GetCommentById([FromRoute] Guid commentId)
@@ -46,6 +49,7 @@ namespace api.Controllers
             return Ok(comment.ToCommentView());
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> CreateComment([FromBody] CommentInCreate commentInCreateObject)
         {
@@ -65,6 +69,7 @@ namespace api.Controllers
             return CreatedAtAction(nameof(GetCommentById), new { commentId = comment.CommentId }, comment.ToCommentView());
         }
 
+        [Authorize]
         [HttpPut]
         [Route("{commentId:guid}")]
         public async Task<IActionResult> UpdateComment([FromRoute] Guid commentId, [FromBody] CommentInUpdate commentInUpdateObject)
@@ -80,6 +85,7 @@ namespace api.Controllers
             return Ok(updatedComment.ToCommentView());
         }
 
+        [Authorize]
         [HttpDelete]
         [Route("{commentId:guid}")]
         public async Task<IActionResult> DeleteComment([FromRoute] Guid commentId)

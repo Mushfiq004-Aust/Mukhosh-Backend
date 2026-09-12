@@ -15,5 +15,7 @@ namespace api.DTOs.Comment
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 
         public Guid CommentId { get; set; }
+
+        public string? UserId { get; set; }
     }
 }

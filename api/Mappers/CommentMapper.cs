@@ -15,7 +15,8 @@ namespace api.Mappers
             {
                 Content = comment.Content,
                 CreatedAt = comment.CreatedAt,
-                CommentId = comment.CommentId
+                CommentId = comment.CommentId,
+                UserId = comment.UserId
             };
         }
 
@@ -24,7 +25,8 @@ namespace api.Mappers
             return new Comment
             {
                 Content = commentInCreate.Content,
-                PostId = commentInCreate.PostId
+                PostId = commentInCreate.PostId,
+                UserId = commentInCreate.UserId
             };
         }
 
