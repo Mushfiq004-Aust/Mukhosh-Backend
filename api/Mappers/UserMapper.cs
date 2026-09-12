@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using api.DTOs.User;
+using api.Interfaces;
 using api.Models;
 
 //Mapper is a class that maps the data from the database model to the response model, so that the response model can be sent to the client.
@@ -29,9 +30,9 @@ namespace api.Mappers
         {
             return new User
             {
+                UserName = user.Name,
                 Name = user.Name,
                 Email = user.Email,
-                Password = user.Password,
                 Institution = user.Institution,
                 Phone = user.Phone
             };
@@ -43,6 +44,16 @@ namespace api.Mappers
             user.Name = userInUpdate.Name;
             user.Phone = userInUpdate.Phone;
             return user;
+        }
+
+        public static UserToken ToUserToken(this User user, ITokenService tokenService)
+        {
+            return new UserToken
+            {
+                UserName = user.UserName,
+                Email = user.Email,
+                Token = tokenService.CreateToken(user)
+            };
         }
     }
 }

@@ -56,18 +56,18 @@ namespace api.Controllers
             return Ok(user.ToUserInView()); //200 OK status code with the user in the response body
         }
 
-        [HttpPost]
-        //FromBody is used to bind the request body to the user object
-        //Taking request body object and mapping it to the User model using the mapper class, then saving it to the database.
-        public async Task<IActionResult> CreateUser([FromBody] UserInCreate userInCreateObject)
-        {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+        // [HttpPost]
+        // //FromBody is used to bind the request body to the user object
+        // //Taking request body object and mapping it to the User model using the mapper class, then saving it to the database.
+        // public async Task<IActionResult> CreateUser([FromBody] UserInCreate userInCreateObject)
+        // {
+        //     if (!ModelState.IsValid)
+        //         return BadRequest(ModelState);
 
-            var user = await _userRepo.CreateUserAsync(userInCreateObject); //map the request body to the User model using the mapper class
-            return CreatedAtAction(nameof(GetUserById), new { userId = user.UserId }, user.ToUserInView());
-            //201 Created status code with the user in the response body
-        }
+        //     var user = await _userRepo.CreateUserAsync(userInCreateObject); //map the request body to the User model using the mapper class
+        //     return CreatedAtAction(nameof(GetUserById), new { userId = user.UserId }, user.ToUserInView());
+        //     //201 Created status code with the user in the response body
+        // }
 
 
         [HttpPut]

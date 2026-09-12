@@ -3,19 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Identity;
 
 namespace api.Models
 {
-    public class User
+    public class User : IdentityUser
     {
         public Guid UserId { get; set; } // must provide value, cannot be null, must match the classname 
 
         public required string Name { get; set; } // must provide value, cannot be null
-
-        [EmailAddress] // for validating the email format
-        public required string Email { get; set; } // must be unique, cannot be null
-
-        public required string Password { get; set; } // must provide value, cannot be null
 
         public required string Institution { get; set; } // must provide value, cannot be null
 

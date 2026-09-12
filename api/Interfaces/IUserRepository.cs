@@ -23,8 +23,8 @@ namespace api.Interfaces
         Task<User?> GetUserByIdAsync(Guid userId);
         //Method to retrieve a single user by their unique identifier (id). can return null if the user is not found, hence the nullable User type.
 
-        Task<User> CreateUserAsync(UserInCreate user);
-        //Method to create a new user in the repository.
+        // Task<User> CreateUserAsync(UserInCreate user);
+        // //Method to create a new user in the repository.
 
         Task<User?> UpdateUserAsync(Guid userId, UserInUpdate user);
         //Method to update an existing user's information based on their unique identifier (id).

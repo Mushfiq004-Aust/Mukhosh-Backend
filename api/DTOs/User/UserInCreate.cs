@@ -19,6 +19,7 @@ namespace api.DTOs.User
         [MaxLength(50, ErrorMessage = "Email cannot exceed 50 characters.")]
         public required string Email { get; set; }
 
+        [Required]
         [MinLength(10, ErrorMessage = "Password must be at least 10 character long.")]
         [MaxLength(50, ErrorMessage = "Password cannot exceed 50 characters.")]
         public required string Password { get; set; }
