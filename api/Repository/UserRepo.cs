@@ -33,20 +33,12 @@ namespace api.Repository
             return await Users.Skip(SkipSize).Take(query.PageSize).ToListAsync();
         }
 
-        public async Task<User?> GetUserByIdAsync(Guid userId)
+        public async Task<User?> GetUserByIdAsync(string userId)
         {
-            return await _context.User.Include(u => u.Post).FirstOrDefaultAsync(u => u.UserId == userId);
+            return await _context.User.Include(u => u.Post).FirstOrDefaultAsync(u => u.Id == userId);
         }
 
-        // public async Task<User> CreateUserAsync(UserInCreate user)
-        // {
-        //     var newUser = user.ToUserInCreate(); //map the request body to the User model using the mapper class
-        //     await _context.User.AddAsync(newUser); // add the user to the database context
-        //     await _context.SaveChangesAsync(); // save the changes to the database
-        //     return newUser;
-        // }
-
-        public async Task<User?> UpdateUserAsync(Guid userId, UserInUpdate user)
+        public async Task<User?> UpdateUserAsync(string userId, UserInUpdate user)
         {
             var existingUser = await _context.User.FindAsync(userId);
             if (existingUser == null)
@@ -60,7 +52,7 @@ namespace api.Repository
             return existingUser;
         }
 
-        public async Task<User?> DeleteUserAsync(Guid userId)
+        public async Task<User?> DeleteUserAsync(string userId)
         {
             var user = await _context.User.FindAsync(userId);
             if (user == null)

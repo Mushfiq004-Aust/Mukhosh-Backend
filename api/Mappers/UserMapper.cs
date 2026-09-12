@@ -16,13 +16,15 @@ namespace api.Mappers
         {
             return new UserInView
             {
-                Name = user.Name,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                UserName = user.UserName,
                 Email = user.Email,
                 Institution = user.Institution,
-                Phone = user.Phone,
+                PhoneNumber = user.PhoneNumber,
                 CreatedAt = user.CreatedAt,
                 Post = user.Post.Select(p => p.ToPostView()).ToList(),
-                UserId = user.UserId
+                UserId = user.Id
             };
         }
 
@@ -30,19 +32,23 @@ namespace api.Mappers
         {
             return new User
             {
-                UserName = user.Name,
-                Name = user.Name,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                UserName = user.UserName,
                 Email = user.Email,
+                PasswordHash = user.Password,
                 Institution = user.Institution,
-                Phone = user.Phone
+                PhoneNumber = user.PhoneNumber
             };
         }
 
         public static User ToUserInUpdate(this UserInUpdate userInUpdate, User user) // response model to the user
         {
             //does not really do anything, but it is here for consistency and future use, in case we want to add more properties to the UserInUpdate model.
-            user.Name = userInUpdate.Name;
-            user.Phone = userInUpdate.Phone;
+            user.FirstName = userInUpdate.FirstName;
+            user.LastName = userInUpdate.LastName;
+            user.UserName = userInUpdate.UserName;
+            user.PhoneNumber = userInUpdate.PhoneNumber;
             return user;
         }
 
@@ -52,6 +58,7 @@ namespace api.Mappers
             {
                 UserName = user.UserName,
                 Email = user.Email,
+                Id = user.Id,
                 Token = tokenService.CreateToken(user)
             };
         }
