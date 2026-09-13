@@ -75,7 +75,7 @@ namespace api.Database
         public DbSet<Post> Post { get; set; }
         public DbSet<Comment> Comment { get; set; }
         public DbSet<Favourite> Favourite { get; set; }
-        public object University { get; internal set; }
+        public DbSet<University> University { get; set; }
         public DbSet<Review> Review { get; set; }
     }
 }
