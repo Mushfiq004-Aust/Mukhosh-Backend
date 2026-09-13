@@ -67,14 +67,14 @@ namespace api.Mappers
             return user;
         }
 
-        public static UserToken ToUserToken(this User user, ITokenService tokenService)
+        public static UserToken ToUserToken(this User user, ITokenService tokenService, IList<string> roles)
         {
             return new UserToken
             {
                 UserName = user.UserName,
                 Email = user.Email,
                 Id = user.Id,
-                Token = tokenService.CreateToken(user)
+                Token = tokenService.CreateToken(user, roles)
             };
         }
     }

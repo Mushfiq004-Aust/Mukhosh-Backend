@@ -51,5 +51,11 @@ namespace api.Repository
 
             return favourite;
         }
+
+        public async Task<bool> FavouriteExistsAsync(string userId, Guid postId)
+        {
+            return await _context.Favourite
+                .AnyAsync(f => f.UserId == userId && f.PostId == postId);
+        }
     }
 }

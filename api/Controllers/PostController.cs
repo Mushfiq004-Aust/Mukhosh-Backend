@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using api.DTOs.Post;
 using api.Helper;
@@ -56,6 +57,8 @@ namespace api.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            postInCreateObject.UserId = userId;
             //Check if the user exists before creating a post for it
             var existingUser = await _userRepo.GetUserByIdAsync(postInCreateObject.UserId);
             //Could use anyasync method to check if the user exists, but this is a simple way to do it

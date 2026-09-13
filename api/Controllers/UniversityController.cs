@@ -42,7 +42,7 @@ namespace api.Controllers
                 return NotFound();
             }
 
-            return Ok(university.ToUniversityView());
+            return Ok(university.ToUniversitySingleView());
         }
 
         // Only Admin can create a university,everyone else is 403 Forbidden.

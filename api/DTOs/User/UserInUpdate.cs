@@ -9,15 +9,15 @@ namespace api.DTOs.User
     public class UserInUpdate
     {
         [Required]
-        [MinLength(5, ErrorMessage = "First name must be at least 5 character long.")]
+        [MinLength(2, ErrorMessage = "First name must be at least 2 character long.")]
         [MaxLength(20, ErrorMessage = "First name cannot exceed 20 characters.")]
         public required string FirstName { get; set; }
 
         [Required]
-        [MinLength(5, ErrorMessage = "Last name must be at least 5 character long.")]
+        [MinLength(2, ErrorMessage = "Last name must be at least 2 character long.")]
         [MaxLength(20, ErrorMessage = "Last name cannot exceed 20 characters.")]
         public required string LastName { get; set; }
-        
+
         [Required]
         [MinLength(5, ErrorMessage = "Name must be at least 5 character long.")]
         [MaxLength(50, ErrorMessage = "Name cannot exceed 50 characters.")]

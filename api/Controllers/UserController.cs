@@ -34,7 +34,7 @@ namespace api.Controllers
 
         [Authorize]
         [HttpGet]
-        public async Task<IActionResult> GetAllUsers(QueryObject query)
+        public async Task<IActionResult> GetAllUsers([FromQuery] QueryObject query)
         {
             var users = await _userRepo.GetAllUsersAsync(query); // only async part is the database call, not the mapping
 

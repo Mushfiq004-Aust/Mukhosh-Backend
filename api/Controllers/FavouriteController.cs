@@ -79,6 +79,12 @@ namespace api.Controllers
                 return NotFound();
             }
 
+            var alreadyFavourited = await _favoruiteRepository.FavouriteExistsAsync(user.Id, postId);
+            if (alreadyFavourited)
+            {
+                return Conflict("You've already favourited this post.");
+            }
+
             var favourite = await _favoruiteRepository.CreateFavourite(
                 new FavouriteInCreate
                 {

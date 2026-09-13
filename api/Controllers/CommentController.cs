@@ -26,7 +26,7 @@ namespace api.Controllers
 
         [Authorize]
         [HttpGet]
-        public async Task<IActionResult> GetAllComments(QueryObject query)
+        public async Task<IActionResult> GetAllComments([FromQuery] QueryObject query)
         {
             var comments = await _commentRepo.GetAllCommentsAsync(query);
             var commentViews = comments.Select(c => c.ToCommentView()).ToList();

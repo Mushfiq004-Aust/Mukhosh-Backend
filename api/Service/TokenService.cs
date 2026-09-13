@@ -20,7 +20,7 @@ namespace api.Service
             _config = config;
             _skey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["JWT:SigningKey"]));
         }
-        public string CreateToken(User user)
+        public string CreateToken(User user, IList<string> roles)
         {
             var claims = new List<Claim>
             {
@@ -29,6 +29,11 @@ namespace api.Service
                 new Claim(ClaimTypes.NameIdentifier, user.Id)
 
             };
+
+            foreach (var role in roles)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, role));
+            }
 
             var credentials = new SigningCredentials(_skey, SecurityAlgorithms.HmacSha512Signature);
 

@@ -47,7 +47,8 @@ namespace api.Controllers
 
                     if (role.Succeeded)
                     {
-                        return Ok(newUser.ToUserToken(_tokenService));
+                        var roles = await _userManager.GetRolesAsync(newUser);
+                        return Ok(newUser.ToUserToken(_tokenService, roles));
                     }
                     else
                     {
@@ -88,8 +89,9 @@ namespace api.Controllers
                 return Unauthorized("Username Not macthed and/or wrong Password!");
             }
 
+            var roles = await _userManager.GetRolesAsync(user);
             return Ok(
-                user.ToUserToken(_tokenService)
+                user.ToUserToken(_tokenService, roles)
             );
         }
 

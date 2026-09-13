@@ -13,5 +13,7 @@ namespace api.Interfaces
         Task<Favourite> CreateFavourite(FavouriteInCreate favourite);
 
         Task<Favourite?> DeleteFavourite(string userId, Guid postId);
+
+        Task<bool> FavouriteExistsAsync(string userId, Guid postId);
     }
 }
