@@ -54,3 +54,7 @@ TestResult.xml
 nunit-*.xml
 
 postman/
+ # Local secrets (use dotnet user-secrets instead)
+   appsettings.Development.json
+   appsettings.Local.json
+   *.secrets.json
