@@ -1,16 +1,23 @@
 # Mukhosh
 
-**Mukhosh** (মুখোশ, meaning "mask" in Bengali) is a university experience and review platform designed to help students make more informed decisions when choosing a university.
+**Mukhosh (মুখোশ, meaning "mask" in Bengali)** is a university experience and review platform built for Bangladeshi students.
 
-University websites and admission brochures provide official information, but they don't always show what everyday student life is actually like. Mukhosh aims to provide a space where students can share their experiences, opinions, and updates about their universities.
+University websites and admission materials provide official information, but they often don't capture what everyday student life is actually like. Mukhosh is designed to give students a place to share and discover experiences about universities — including academics, campus environment, food, research facilities, extracurricular activities, and more.
 
-The platform allows users to create posts, interact through comments, favourite posts, and review universities across multiple categories.
+The platform supports university reviews, student posts, comments, favourites, university discovery, verified university identities, and administrative moderation.
 
-> **Backend:** ASP.NET Core Web API (.NET 8)
-> **Database:** Microsoft SQL Server
-> **ORM:** Entity Framework Core
-> **Authentication:** ASP.NET Core Identity + JWT
-> **Frontend:** Angular *(in progress)*
+---
+## Production Deployment
+
+Mukhosh started as a local full-stack project and was eventually deployed as a complete production application.
+
+The **Angular 18 frontend** is hosted on **Vercel**, while the **ASP.NET Core .NET 8 Web API** is containerized with Docker and deployed on **Render**. The local SQL Server database was migrated to **Azure SQL Database** for production, with the backend connecting to it through Entity Framework Core.
+
+For email verification, the original Gmail SMTP setup could not be used from Render's free environment because of its SMTP port restrictions. The email system was therefore moved to **GMass SMTP**, using port **2525**, while keeping the existing Gmail address as the sender.
+
+All production secrets, database credentials, JWT configuration, frontend URL, and SMTP credentials are stored as environment variables rather than committed to the repository.
+
+**Live:** https://mukhosh-beta.vercel.app/
 
 ---
 
@@ -20,38 +27,58 @@ The platform allows users to create posts, interact through comments, favourite 
 
 * User registration and login
 * JWT-based authentication
-* ASP.NET Core Identity for user management
-* Role-based authorization with `User` and `Admin` roles
-* Protected endpoints using `[Authorize]`
-* Admin-only operations for selected resources
+* ASP.NET Core Identity
+* Email verification
+* Password reset through email
+* Role-based authorization
+* `User` and `Admin` roles
+* Protected API endpoints
+* Separate email verification and university verification
+* University affiliation determined through verified university email domains
+* Banned-user enforcement
+
+### University Verification
+
+Mukhosh distinguishes between:
+
+* **Email verified** — the user's email address has been verified
+* **University verified** — the user has a verified university email/domain
+
+Regular users can create accounts and browse the platform, while university-affiliated users can be verified against their university email domain.
+
+This allows Mukhosh to distinguish verified university students from general users.
 
 ### Posts
 
 * Create posts
-* View all posts
-* View an individual post
+* View posts
+* View individual posts
 * Update posts
 * Delete posts
-* Associate posts with users
-* Pagination support for post listings
+* Pagination
+* Positive / Negative / Mixed post vibes
+* User ownership
+* University-affiliated posting restrictions
 
 ### Comments
 
-* Add comments to posts
-* Retrieve comments
+* Create comments
+* View comments
 * Update comments
 * Delete comments
-* Associate comments with their corresponding posts and users
+* Associate comments with users and posts
+* User ownership checks
 
 ### Favourites
 
 * Favourite posts
-* Remove a post from favourites
-* Prevent duplicate favourite entries
+* Remove favourites
+* Prevent duplicate favourites
+* View a user's favourite posts
 
 ### University Reviews
 
-Users can review universities using multiple rating categories:
+Users can review universities across multiple categories:
 
 * Environment
 * Faculty
@@ -62,128 +89,268 @@ Users can review universities using multiple rating categories:
 * Administration
 * Extracurricular Activities
 
-Each category is rated out of **5**, along with a written review.
+Each category is rated out of **5**.
 
-The system also supports:
+The review system also supports:
 
 * One review per user per university
-* Database-level uniqueness for user/university reviews
-* University review statistics
+* Database-level uniqueness
+* Written reviews
 * Per-category average ratings
-* Total review count
-* Admin-only university creation
+* Overall university rating statistics
+* Total review counts
+
+### University Discovery
+
+* Browse universities
+* View individual university information
+* Search/filter universities
+* View aggregated review statistics
+* Admin-controlled university creation
+
+### User Profiles
+
+Users can manage profile information including:
+
+* First name
+* Last name
+* Username
+* Phone number
+
+University information is associated with verified university email domains rather than being freely selected during registration.
+
+### Admin System
+
+The application includes an administrative area for managing the platform.
+
+Admin functionality includes:
+
+* Dashboard statistics
+* User management
+* User details
+* User banning
+* Temporary bans
+* Permanent bans
+* University management
+* Protected admin-only endpoints
+
+Permanent bans preserve the user account while removing the user's platform activities/content, preventing the banned account from simply being recreated.
 
 ---
 
-## Tech Stack
+# Tech Stack
 
-| Category          | Technology                           |
-| ----------------- | ------------------------------------ |
-| Framework         | ASP.NET Core Web API (.NET 8)        |
-| Language          | C#                                   |
-| ORM               | Entity Framework Core                |
-| Database          | Microsoft SQL Server                 |
-| Authentication    | ASP.NET Core Identity                |
-| Authorization     | Role-Based Authorization             |
-| Tokens            | JWT                                  |
-| API Documentation | Swagger / OpenAPI                    |
-| API Testing       | Postman                              |
-| Frontend          | Angular + TypeScript *(in progress)* |
-| Version Control   | Git / GitHub                         |
+## Backend
+
+| Technology            | Purpose              |
+| --------------------- | -------------------- |
+| C#                    | Programming language |
+| ASP.NET Core Web API  | Backend framework    |
+| .NET 8                | Runtime / SDK        |
+| Entity Framework Core | ORM                  |
+| Microsoft SQL Server  | Database             |
+| ASP.NET Core Identity | User management      |
+| JWT                   | Authentication       |
+| Swagger / OpenAPI     | API documentation    |
+| MailKit               | Email functionality  |
+
+## Frontend
+
+| Technology         | Purpose             |
+| ------------------ | ------------------- |
+| Angular 18         | Frontend framework  |
+| TypeScript         | Frontend language   |
+| HTML / CSS         | UI                  |
+| Angular Router     | Client-side routing |
+| Angular HttpClient | API communication   |
+
+## Development Tools
+
+* Visual Studio / VS Code
+* SQL Server Management Studio
+* Postman
+* Git
+* GitHub
 
 ---
 
-## Architecture
+# Architecture
 
-The backend follows a layered structure to separate HTTP handling, data transformation, and database access.
+Mukhosh uses a layered backend architecture.
 
 ```text
-HTTP Request
-     │
-     ▼
-Controller
-     │
-     │ receives request
-     │ validates input / authorization
-     ▼
-DTO
-     │
-     │ request / response data
-     ▼
-Mapper
-     │
-     │ DTO ↔ Entity conversion
-     ▼
-Repository Interface
-     │
-     ▼
-Repository
-     │
-     │ Entity Framework Core
-     ▼
-DbContext
-     │
-     ▼
-SQL Server
+                    ┌─────────────────┐
+                    │     Angular     │
+                    │    Frontend     │
+                    └────────┬────────┘
+                             │
+                             │ HTTP / JSON
+                             ▼
+                    ┌─────────────────┐
+                    │   Controllers   │
+                    └────────┬────────┘
+                             │
+                             ▼
+                    ┌─────────────────┐
+                    │      DTOs       │
+                    └────────┬────────┘
+                             │
+                             ▼
+                    ┌─────────────────┐
+                    │     Mappers     │
+                    └────────┬────────┘
+                             │
+                             ▼
+                    ┌─────────────────┐
+                    │   Repositories  │
+                    └────────┬────────┘
+                             │
+                             ▼
+                    ┌─────────────────┐
+                    │    DbContext    │
+                    │  EntityFramework│
+                    └────────┬────────┘
+                             │
+                             ▼
+                    ┌─────────────────┐
+                    │  SQL Server DB  │
+                    └─────────────────┘
 ```
 
-### Why this structure?
+### Backend responsibilities
 
-The project separates responsibilities so that:
+**Controllers**
 
-* **Controllers** handle HTTP requests, responses, routing, and authorization.
-* **DTOs** define the data expected by API endpoints and the data returned to clients.
-* **Mappers** convert between DTOs and database entities.
-* **Interfaces** define repository contracts.
-* **Repositories** handle database operations through Entity Framework Core.
-* **Models** represent the application's database entities.
-* **DbContext** manages the Entity Framework Core database connection and entity relationships.
+Handle HTTP requests, routing, validation, authentication and authorization.
+
+**DTOs**
+
+Define request and response structures so database entities are not directly exposed through the API.
+
+**Mappers**
+
+Convert between DTOs and database entities.
+
+**Repositories**
+
+Handle database operations through Entity Framework Core.
+
+**Models**
+
+Represent database entities and relationships.
+
+**DbContext**
+
+Manages Entity Framework Core configuration, relationships and database access.
+
+**Services**
+
+Contain reusable application logic such as JWT token generation and email delivery.
+
+**Middleware**
+
+Handles application-wide behavior such as banned-user enforcement.
 
 ---
 
-## Project Structure
+# Project Structure
 
 ```text
-api/
+Mukhosh/
 │
-├── Controllers/
-│   └── HTTP endpoints
+├── api/
+│   │
+│   ├── Controllers/
+│   │   ├── AdminController.cs
+│   │   ├── AuthController.cs
+│   │   ├── CommentController.cs
+│   │   ├── FavouriteController.cs
+│   │   ├── PostController.cs
+│   │   ├── ReviewController.cs
+│   │   ├── UniversityController.cs
+│   │   └── UserController.cs
+│   │
+│   ├── DTOs/
+│   │   ├── Admin/
+│   │   ├── Comment/
+│   │   ├── Favourite/
+│   │   ├── Post/
+│   │   ├── Review/
+│   │   ├── University/
+│   │   └── User/
+│   │
+│   ├── Database/
+│   │   └── ApplicationDBContext.cs
+│   │
+│   ├── Helper/
+│   │
+│   ├── Interfaces/
+│   │
+│   ├── Mappers/
+│   │
+│   ├── Middleware/
+│   │   └── BanEnforcementMiddleware.cs
+│   │
+│   ├── Models/
+│   │
+│   ├── Repository/
+│   │
+│   ├── Service/
+│   │   ├── EmailService.cs
+│   │   └── TokenService.cs
+│   │
+│   ├── Migrations/
+│   │
+│   ├── Program.cs
+│   ├── api.csproj
+│   └── api.http
 │
-├── DTOs/
-│   └── Request and response models
+├── frontend/
+│   │
+│   ├── public/
+│   │
+│   ├── src/
+│   │   ├── app/
+│   │   │   ├── admin-dashboard/
+│   │   │   ├── admin-users/
+│   │   │   ├── admin-user-details/
+│   │   │   ├── login/
+│   │   │   ├── navbar/
+│   │   │   ├── post-create/
+│   │   │   ├── post-detail/
+│   │   │   ├── post-list/
+│   │   │   ├── profile/
+│   │   │   ├── register/
+│   │   │   ├── university-create/
+│   │   │   ├── university-detail/
+│   │   │   ├── university-list/
+│   │   │   ├── my-favourites/
+│   │   │   ├── pages/
+│   │   │   ├── core/
+│   │   │   ├── models/
+│   │   │   └── services/
+│   │   │
+│   │   ├── environments/
+│   │   ├── index.html
+│   │   ├── main.ts
+│   │   └── styles.css
+│   │
+│   ├── angular.json
+│   ├── package.json
+│   ├── package-lock.json
+│   └── tsconfig.json
 │
-├── Mappers/
-│   └── DTO ↔ Entity conversion
-│
-├── Interfaces/
-│   └── Repository contracts
-│
-├── Repository/
-│   └── Database access logic
-│
-├── Models/
-│   └── Entity Framework Core models
-│
-├── Database/
-│   └── ApplicationDbContext
-│
-├── Migrations/
-│   └── EF Core migrations
-│
-├── Program.cs
-│   └── Application startup and dependency injection
-│
-└── appsettings.json
-    └── Application configuration
+├── .gitignore
+└── README.md
 ```
 
 ---
 
-## Database
+# Database
 
-The application uses **Microsoft SQL Server** with **Entity Framework Core**.
+Mukhosh uses **Microsoft SQL Server** with **Entity Framework Core**.
 
-Entity relationships include:
+The primary application entities include:
 
 ```text
 User
@@ -195,43 +362,43 @@ User
  │    └── Favourites
  │
  └── Reviews
-        │
-        └── University
+       │
+       └── University
 ```
 
-Entity Framework Core migrations are used to create and update the database schema.
+Additional Identity tables are created by ASP.NET Core Identity for authentication and role management.
+
+Entity Framework Core migrations are used to manage database schema changes.
 
 ---
+
+# Getting Started
 
 ## Prerequisites
 
-Before running the project, make sure you have:
+Install the following before running Mukhosh:
 
 * [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
+* Node.js
+* npm
+* Angular CLI
 * Microsoft SQL Server
 * SQL Server Management Studio or another SQL client
 * Git
-* [Postman](https://www.postman.com/downloads/) *(optional)*
+
+Postman is optional because the API can also be tested through Swagger.
 
 ---
 
-## Getting Started
+# Backend Setup
 
-### 1. Clone the repository
-
-```bash
-git clone https://github.com/Mushfiq004-Aust/DotNet_v8_Web_API.git
-```
-
-Navigate into the API project:
+Open a terminal in the project root.
 
 ```bash
-cd DotNet_v8_Web_API/api
+cd api
 ```
 
----
-
-### 2. Restore dependencies
+Restore the .NET dependencies:
 
 ```bash
 dotnet restore
@@ -239,76 +406,57 @@ dotnet restore
 
 ---
 
-### 3. Configure the database
+## Configure Secrets
 
-The application requires a SQL Server connection string.
+Mukhosh requires configuration values that should **not** be committed to GitHub.
 
-Update the connection string according to your local SQL Server instance.
+These include:
 
-For example:
+* SQL Server connection string
+* JWT signing key
+* Email credentials
 
-```text
-Server=YOUR_SERVER;
-Database=mukhosh;
-Trusted_Connection=True;
-TrustServerCertificate=True;
-```
+.NET User Secrets can be used during local development.
 
-Replace `YOUR_SERVER` with your SQL Server instance.
-
-For example:
-
-```text
-localhost\SQLEXPRESS
-```
-
-or:
-
-```text
-DESKTOP-XXXXXXX\SQLEXPRESS
-```
-
-> Do not commit real database credentials or JWT secrets to GitHub.
-
----
-
-### 4. Configure JWT
-
-The application also requires a JWT signing key.
-
-Use a strong, randomly generated secret key and configure it through your local development configuration or user secrets.
-
-For example, with .NET User Secrets:
+Initialize User Secrets:
 
 ```bash
 dotnet user-secrets init
 ```
 
-Then configure your connection string and JWT signing key according to the configuration keys used by the application.
-
-Example:
+Configure the database:
 
 ```bash
-dotnet user-secrets set "ConnectionStrings:DefaultConnection" "Server=YOUR_SERVER;Database=mukhosh;Trusted_Connection=True;TrustServerCertificate=True;"
+dotnet user-secrets set "ConnectionStrings:DefaultConnection" "YOUR_CONNECTION_STRING"
 ```
+
+Configure the JWT signing key:
 
 ```bash
 dotnet user-secrets set "JWT:SigningKey" "YOUR_RANDOM_SECRET_KEY"
 ```
 
-The exact configuration key names should match the configuration used in `Program.cs` and the application's settings classes.
+Configure email settings according to the configuration used by the application.
+
+**Never commit real passwords, API keys, JWT signing keys, database credentials or email credentials to GitHub.**
 
 ---
 
-### 5. Install Entity Framework Core CLI tools
+# Database Setup
 
-If `dotnet ef` is not available on your machine:
+After configuring the connection string, apply the Entity Framework Core migrations:
+
+```bash
+dotnet ef database update
+```
+
+If Entity Framework CLI is not installed:
 
 ```bash
 dotnet tool install --global dotnet-ef
 ```
 
-Verify the installation:
+Verify:
 
 ```bash
 dotnet ef --version
@@ -316,21 +464,9 @@ dotnet ef --version
 
 ---
 
-### 6. Apply database migrations
+# Run the Backend
 
-Run:
-
-```bash
-dotnet ef database update
-```
-
-This creates or updates the SQL Server database using the existing Entity Framework Core migrations.
-
----
-
-### 7. Run the API
-
-Start the application with:
+From the `api` directory:
 
 ```bash
 dotnet run
@@ -342,115 +478,138 @@ For development with automatic reload:
 dotnet watch run
 ```
 
-The API will run on the URL shown in the terminal.
+The API URL depends on the configured launch profile.
 
-For example:
+For the default local development configuration:
 
 ```text
 http://localhost:5185
 ```
 
-Swagger UI will be available at:
+Swagger:
 
 ```text
 http://localhost:5185/swagger
 ```
 
-The port may differ depending on your local configuration.
+---
+
+# Frontend Setup
+
+Open a second terminal.
+
+From the project root:
+
+```bash
+cd frontend
+```
+
+Install Angular dependencies:
+
+```bash
+npm install
+```
+
+Start the development server:
+
+```bash
+npm start
+```
+
+The Angular application will normally be available at:
+
+```text
+http://localhost:4200
+```
+
+The frontend communicates with the ASP.NET Core API through the configured API URL in the Angular environment configuration.
 
 ---
 
-## Authentication
+# Running the Full Application
 
-Mukhosh uses **ASP.NET Core Identity** together with **JWT authentication**.
+You need both the backend and frontend running.
 
-### Register
+### Terminal 1 — Backend
 
-```http
-POST /api/Auth/register
+```bash
+cd api
+dotnet run
 ```
 
-A newly registered account receives the default `User` role.
+### Terminal 2 — Frontend
 
-### Login
-
-```http
-POST /api/Auth/login
+```bash
+cd frontend
+npm start
 ```
 
-A successful login returns a JWT.
+Then open:
 
-The token can then be sent with protected requests using:
+```text
+http://localhost:4200
+```
+
+The Angular frontend communicates with the API running on the configured backend URL.
+
+---
+
+# Authentication Flow
+
+Mukhosh uses JWT authentication.
+
+The general authentication flow is:
+
+```text
+Register
+   │
+   ▼
+Email Verification
+   │
+   ▼
+Login
+   │
+   ▼
+JWT Token
+   │
+   ▼
+Authenticated API Requests
+```
+
+Authenticated requests use:
 
 ```http
 Authorization: Bearer YOUR_JWT_TOKEN
 ```
 
-### Authorization
-
-Protected endpoints use JWT authentication.
-
-Admin-only endpoints additionally require the `Admin` role.
-
-For example:
-
-```csharp
-[Authorize(Roles = "Admin")]
-```
+Admin endpoints additionally require the `Admin` role.
 
 ---
 
-## API Overview
+# API
 
-The main API resources currently include:
+The backend exposes RESTful endpoints for the application's main resources.
 
-| Resource   | Main Operations              |
-| ---------- | ---------------------------- |
-| Auth       | Register, Login              |
-| Post       | Create, Read, Update, Delete |
-| Comment    | Create, Read, Update, Delete |
-| Favourite  | Add, Remove                  |
-| University | Read, Create                 |
-| Review     | Create, Read, Update         |
+| Resource       | Operations                                    |
+| -------------- | --------------------------------------------- |
+| Authentication | Register, Login, Verify Email, Password Reset |
+| Users          | View / Update Profile                         |
+| Posts          | Create, Read, Update, Delete                  |
+| Comments       | Create, Read, Update, Delete                  |
+| Favourites     | Add, Remove, List                             |
+| Universities   | Create, Read, Search                          |
+| Reviews        | Create, Read, Update                          |
+| Administration | Dashboard, Users, Ban Management              |
 
-Typical endpoints include:
-
-```text
-POST   /api/Auth/register
-POST   /api/Auth/login
-
-GET    /api/Post
-GET    /api/Post/{id}
-POST   /api/Post
-PUT    /api/Post/{id}
-DELETE /api/Post/{id}
-
-GET    /api/Comment/{id}
-POST   /api/Comment
-PUT    /api/Comment/{id}
-DELETE /api/Comment/{id}
-
-POST   /api/Favourite
-DELETE /api/Favourite
-
-GET    /api/University
-GET    /api/University/{id}
-POST   /api/University
-
-GET    /api/Review/{id}
-POST   /api/Review
-PUT    /api/Review/{id}
-```
-
-> Swagger provides the complete endpoint documentation, request schemas, response schemas, and authorization requirements.
+Swagger provides the complete list of available endpoints, request models and response models.
 
 ---
 
-## Testing the API
+# API Testing
 
-### Swagger
+## Swagger
 
-After running the API, open:
+With the backend running, open:
 
 ```text
 http://localhost:5185/swagger
@@ -458,109 +617,261 @@ http://localhost:5185/swagger
 
 Swagger can be used to:
 
-* View available endpoints
-* Inspect request and response models
-* Send API requests
+* Explore endpoints
+* Inspect request/response models
+* Test API endpoints
 * Test authenticated endpoints
-* Inspect generated OpenAPI documentation
+* Inspect the generated OpenAPI specification
 
-### Postman
+## Postman
 
-The API can also be tested using Postman.
-
-With the API running, the OpenAPI specification is available at:
+The OpenAPI specification can be imported into Postman:
 
 ```text
 http://localhost:5185/swagger/v1/swagger.json
 ```
 
-This specification can be imported into Postman to generate requests for the API.
+Postman is optional and is not required to run the application.
 
 ---
+## Load Testing
 
-## Database Migrations
+The API was tested using [k6](https://k6.io) across 8 scenarios covering functional correctness, performance, security controls, and concurrency behavior.
 
-Create a new migration after changing the Entity Framework Core models:
+Test coverage included:
+
+- Functional smoke testing across core endpoints:
+  - Posts
+  - Comments
+  - Favourites
+  - Universities
+  - User profile
+- Ramping load test (0 → 50 concurrent users)
+- Authentication rate-limit testing
+- Favourite race-condition testing
+- Pagination abuse testing
+- Concurrent post creation testing
+- Concurrent comment creation testing
+- Review duplicate submission testing
+
+## Results
+
+✅ **1,750 / 1,750 checks passed**  
+✅ **0.00% HTTP error rate**  
+✅ **50 concurrent users handled successfully**  
+✅ **No unhandled 500 errors under load**
+
+Performance:
+
+- Average response time: **20.44ms**
+- p(95) response time: **82.82ms**
+- p(95) under ramping load: **91.38ms**
+- Throughput: **~14.7 requests/second**
+
+## Issues Found and Fixed
+
+During initial load testing, a real production-level issue was discovered:
+
+- `GET /Comment` endpoint crashed with a `NullReferenceException` under load because related `User` and `University` navigation properties were not loaded before mapping.
+
+Fix:
+
+- Added required Entity Framework Core eager loading using:
+  - `.Include(c => c.User)`
+  - `.ThenInclude(u => u.University)`
+
+After applying the fix, the complete load test suite was executed again and all scenarios passed successfully.
+
+![Mukhosh API load test report](docs/mukhosh-load-test-report.png)
+---
+
+
+
+# Database Changes
+
+When the application's Entity Framework models change, create a new migration.
+
+From the `api` directory:
 
 ```bash
 dotnet ef migrations add MigrationName
 ```
 
-Apply the migration:
+Then apply it:
 
 ```bash
 dotnet ef database update
 ```
 
-For example:
+Example:
 
 ```bash
-dotnet ef migrations add AddReviewSystem
+dotnet ef migrations add AddNewFeature
 dotnet ef database update
 ```
+
+Migrations should be committed to the repository so another environment can recreate the database schema.
 
 ---
 
-## Current Development Status
+# Environment Configuration
+
+The repository intentionally excludes sensitive and machine-specific configuration.
+
+Examples of values that should remain outside Git:
+
+```text
+Database connection strings
+JWT signing keys
+Email passwords
+SMTP credentials
+Production secrets
+Local development configuration
+```
+
+For local development, use:
+
+```text
+.NET User Secrets
+```
+
+For production deployment, use the hosting provider's environment-variable/secret-management system.
+
+---
+
+# Deployment
+
+Mukhosh consists of three major parts:
+
+```text
+Angular Frontend
+       │
+       │ HTTPS
+       ▼
+ASP.NET Core API
+       │
+       │ Database Connection
+       ▼
+Production SQL Server
+```
+
+The frontend, API and database can be deployed independently.
+
+Production configuration should use environment-specific settings and secrets rather than committing production credentials to the repository.
+
+---
+
+# Security Considerations
+
+Mukhosh uses several security mechanisms, including:
+
+* JWT authentication
+* ASP.NET Core Identity
+* Role-based authorization
+* Protected API endpoints
+* Email verification
+* University-domain verification
+* User ownership checks
+* Admin-only operations
+* Banned-user enforcement
+* Database constraints for unique relationships
+* Secret configuration outside source control
+
+Before production deployment, review:
+
+* CORS configuration
+* JWT signing key
+* Database credentials
+* Email credentials
+* HTTPS configuration
+* Production environment variables
+* Rate limiting
+* Error handling
+* Logging
+* Database backups
+* Dependency vulnerabilities
+
+---
+
+# Current Project Status
 
 ### Backend
 
 * [x] ASP.NET Core Web API
+* [x] .NET 8
 * [x] Entity Framework Core
 * [x] SQL Server integration
 * [x] ASP.NET Core Identity
 * [x] JWT authentication
+* [x] Email verification
+* [x] Password reset
 * [x] Role-based authorization
 * [x] User management
 * [x] Post CRUD
-* [x] Comment functionality
-* [x] Favourite functionality
-* [x] University functionality
-* [x] University review system
+* [x] Comments
+* [x] Favourites
+* [x] University management
+* [x] University reviews
+* [x] University verification
+* [x] Admin dashboard
+* [x] User banning
+* [x] Swagger / OpenAPI
 * [x] Entity Framework Core migrations
-* [x] Swagger / OpenAPI documentation
-* [x] Postman API testing
 
 ### Frontend
 
-* [ ] Angular frontend
-* [ ] TypeScript integration
-* [ ] Authentication UI
-* [ ] Post feed
-* [ ] University browsing and filtering
-* [ ] University review interface
-* [ ] User profile interface
+* [x] Angular application
+* [x] Authentication UI
+* [x] Registration
+* [x] Login
+* [x] Email verification
+* [x] Password reset
+* [x] User profile
+* [x] Post feed
+* [x] Post creation
+* [x] Post details
+* [x] Comments
+* [x] Favourites
+* [x] University browsing
+* [x] University details
+* [x] University reviews
+* [x] Admin dashboard
+* [x] Admin user management
+* [x] Authentication guards
+* [x] HTTP authentication interceptor
 
 ---
 
-## Roadmap
+# Future Improvements
 
-Planned improvements include:
+Potential future improvements include:
 
-* Angular frontend
-* Better post and university search
-* Filtering by university and post attributes
-* Improved user profiles
-* Connecting users and posts to verified universities
-* Additional university statistics
-* Improved authentication and account management
-* Deployment of the backend and frontend
-* Production database configuration
-* CI/CD pipeline
+* Production deployment
+* Automated CI/CD
+* Improved search and filtering
+* More university statistics
+* Richer student profiles
+* University-specific Q&A / "Ask a Boro Bhai"
+* Notification system
+* Improved moderation and reporting
+* Automated database backups
+* Production monitoring and logging
+* Performance optimization
 
 ---
 
-## What I Learned From This Project
+# What I Learned
 
-This project was built as a practical exercise in developing a structured backend using the ASP.NET ecosystem.
+Mukhosh was built as a practical full-stack project to gain experience with the ASP.NET and Angular ecosystems.
 
-Key areas covered include:
+The project covers:
 
-* C# and ASP.NET Core
-* REST API development
+* C#
+* ASP.NET Core Web API
+* REST API design
 * Entity Framework Core
-* Entity relationships and foreign keys
 * SQL Server
+* Entity relationships and foreign keys
 * Database migrations
 * DTO-based API design
 * Repository pattern
@@ -568,12 +879,18 @@ Key areas covered include:
 * ASP.NET Core Identity
 * JWT authentication
 * Role-based authorization
-* API validation
-* Swagger / OpenAPI
-* API testing with Postman
+* Email-based authentication flows
+* Angular
+* TypeScript
+* Angular routing
+* HTTP interceptors
+* Authentication guards
+* Frontend/backend integration
+* API testing with Swagger and Postman
+* Git and GitHub
 
 ---
 
-## License
+# License
 
 This project currently does not have a separate open-source license.
