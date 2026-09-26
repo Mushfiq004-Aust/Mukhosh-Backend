@@ -13,9 +13,9 @@ Mukhosh started as a local full-stack project and was eventually deployed as a c
 
 The **Angular 18 frontend** is hosted on **Vercel**, while the **ASP.NET Core .NET 8 Web API** is containerized with Docker and deployed on **Render**. The local SQL Server database was migrated to **Azure SQL Database** for production, with the backend connecting to it through Entity Framework Core.
 
-For email verification, the original Gmail SMTP setup could not be used from Render's free environment because of its SMTP port restrictions. The email system was therefore moved to **GMass SMTP**, using port **2525**, while keeping the existing Gmail address as the sender.
+For email verification and password reset emails, the original Gmail SMTP setup could not be used from Render's free environment because of its SMTP port restrictions. The email system was therefore moved to **Sendlib**, which uses the connected Gmail account through its API without requiring a custom domain.
 
-All production secrets, database credentials, JWT configuration, frontend URL, and SMTP credentials are stored as environment variables rather than committed to the repository.
+All production secrets, database credentials, JWT configuration, frontend URL, and Sendlib API credentials are stored as environment variables rather than committed to the repository.
 
 **Live:** https://mukhosh-beta.vercel.app/
 
